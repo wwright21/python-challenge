@@ -17,13 +17,27 @@ with open(csvpath,encoding='utf') as csvfile:
     header = next(csvreader)
     electionDict = {rows[0]:rows[2] for rows in csvreader}
 
-# Now invert the dictionary mapping so we get 1 candidate and then a slew of 
-# unique IDs corresponding to everyone that voted for him / her
+# Now invert the dictionary mapping so we get 1 candidate and then every unique
+# ID that voted for him / her
 invElectionDict = defaultdict(list)
 for key, value in electionDict.items():
     invElectionDict[value].append(key)
 
 # create another dictionary to print the length of values for each key (aka politician)
-# by using a dictionary comprehension
+# by using a dictionary comprehension. This dictionary will contain everything
+# we need to solve this challenge!
 length_ElectionDict = {key: len(value) for key, value in invElectionDict.items()}
-print(length_ElectionDict)
+
+# Find the total votes
+totalVotes = sum(length_ElectionDict.values())
+
+# The votes by candidate is already stored as the value in our length_ElectionDict. So,
+# let's find the percentage breakdown by candidate
+CCSperc = round(length_ElectionDict['Charles Casper Stockham'] / totalVotes * 100,3)
+DDperc = round(length_ElectionDict['Diana DeGette'] / totalVotes * 100,3)
+RADperc = round(length_ElectionDict['Raymon Anthony Doane'] / totalVotes * 100,3)
+
+# Find the winning politician by first finding the max value of the 
+# length_ElectionDict dictionary 
+winner = list(length_ElectionDict.keys())[list(length_ElectionDict.values()).index(max(length_ElectionDict.values()))]
+print(winner)
